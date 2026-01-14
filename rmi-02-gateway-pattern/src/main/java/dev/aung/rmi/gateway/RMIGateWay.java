@@ -1,4 +1,4 @@
-package dev.aung.rmi.utils;
+package dev.aung.rmi.gateway;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

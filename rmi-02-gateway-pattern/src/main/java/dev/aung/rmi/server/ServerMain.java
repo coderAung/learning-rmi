@@ -1,9 +1,11 @@
 package dev.aung.rmi.server;
 
 import dev.aung.rmi.commons.Constant;
-import dev.aung.rmi.service.Calculator;
-import dev.aung.rmi.service.impl.CalculatorImpl;
-import dev.aung.rmi.utils.impl.RMIGateWayImpl;
+import dev.aung.rmi.commons.service.Calculator;
+import dev.aung.rmi.commons.service.StudentService;
+import dev.aung.rmi.commons.service.impl.CalculatorImpl;
+import dev.aung.rmi.commons.service.impl.StudentServiceImpl;
+import dev.aung.rmi.gateway.impl.RMIGateWayImpl;
 
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
@@ -19,7 +21,7 @@ public class ServerMain {
             LocateRegistry.createRegistry(1099);
 
             container.put(Calculator.class.getSimpleName(), new CalculatorImpl());
-
+            container.put(StudentService.class.getSimpleName(), new StudentServiceImpl());
             var gateway = new RMIGateWayImpl(container);
             Naming.bind(Constant.GATEWAY_URL, gateway);
 

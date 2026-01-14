@@ -1,6 +1,6 @@
-package dev.aung.rmi.service.impl;
+package dev.aung.rmi.commons.service.impl;
 
-import dev.aung.rmi.service.Calculator;
+import dev.aung.rmi.commons.service.Calculator;
 
 public class CalculatorImpl implements Calculator {
 

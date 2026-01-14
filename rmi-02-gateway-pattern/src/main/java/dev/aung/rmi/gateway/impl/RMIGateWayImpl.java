@@ -1,8 +1,7 @@
-package dev.aung.rmi.utils.impl;
+package dev.aung.rmi.gateway.impl;
 
-import dev.aung.rmi.utils.RMIFunction;
-import dev.aung.rmi.utils.RMIGateWay;
-import kotlin.TypeCastException;
+import dev.aung.rmi.gateway.RMIFunction;
+import dev.aung.rmi.gateway.RMIGateWay;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -22,7 +21,7 @@ public class RMIGateWayImpl extends UnicastRemoteObject implements RMIGateWay {
         try {
             var obj = (T) container.get(clz.getSimpleName());
             return func.apply(obj);
-        } catch (TypeCastException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

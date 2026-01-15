@@ -17,6 +17,6 @@ In client module (which is a package in this project), There are two utility cla
 - RMIUtils
 - RMIFunctions
 
-#### RMIUtilS
+#### RMIUtils
 
 RMIUtils is used as a template pattern to lookup rmi objects, moreover, it has safecall method which catch RemoteException inside.

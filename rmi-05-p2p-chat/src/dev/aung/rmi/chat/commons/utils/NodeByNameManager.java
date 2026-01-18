@@ -1,6 +1,5 @@
 package dev.aung.rmi.chat.commons.utils;
 
-import dev.aung.rmi.chat.server.ChatNodeImpl;
 
 import java.net.InetAddress;
 import java.net.MalformedURLException;
@@ -9,8 +8,26 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NodeByNameManager implements NodeManager {
+
+    private final Map<String, ChatNode> nodes;
+
+    public NodeByNameManager() {
+        this.nodes = new HashMap<>();
+    }
+
+    @Override
+    public void addNode(ChatNode node) throws RemoteException {
+        this.nodes.put(node.getId(), node);
+    }
+
+    @Override
+    public void removeNode(String id) throws RemoteException {
+        this.nodes.remove(id);
+    }
 
     @Override
     public ChatNode findNode() throws UnknownHostException, MalformedURLException, NotBoundException, RemoteException {
@@ -24,7 +41,7 @@ public class NodeByNameManager implements NodeManager {
     }
 
     @Override
-    public void registerNode(ChatNodeImpl node) throws UnknownHostException, RemoteException, MalformedURLException {
+    public void registerNode(ChatNode node) throws UnknownHostException, RemoteException, MalformedURLException {
         try {
             LocateRegistry.createRegistry(Constants.PORT);
         } catch (Exception e) {
@@ -33,4 +50,10 @@ public class NodeByNameManager implements NodeManager {
         var host = InetAddress.getLocalHost().getHostAddress();
         Naming.rebind("rmi://%s:%s/%s".formatted(host, Constants.PORT, node.getId()), node);
     }
+
+    @Override
+    public boolean isConnected(String id) {
+        return this.nodes.containsKey(id);
+    }
 }
+

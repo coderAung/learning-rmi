@@ -2,7 +2,7 @@
 
 This Peer 2 Peer chat program is a minimum example of using RMI.
 
-### Usage guid
+### Usage guide
 
 ```
 # clone git repo

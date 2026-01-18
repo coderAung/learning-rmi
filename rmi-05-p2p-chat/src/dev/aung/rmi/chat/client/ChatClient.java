@@ -18,6 +18,7 @@ public class ChatClient {
         do {
             try {
                 var node = manager.findNode();
+                manager.addNode(node);
 
                 System.out.println("++++++++++++++++++++++++++++++++++");
                 System.out.println("You are talking with " + node.getId());

@@ -2,6 +2,7 @@ package dev.aung.rmi.chat.app.core;
 
 import dev.aung.rmi.chat.api.PeerNode;
 import dev.aung.rmi.chat.api.dto.MessageForm;
+import dev.aung.rmi.chat.app.utils.Constants;
 import dev.aung.rmi.chat.app.utils.Inputs;
 import dev.aung.rmi.chat.app.utils.NodeUtils;
 
@@ -21,6 +22,11 @@ public class P2PClient {
     }
 
     public void run() {
+        try {
+            System.out.printf("Node '%s' is running at : %s%n", node.getId(), Constants.getHost());
+        } catch (Exception e) {
+            System.exit(0);
+        }
         while (true) {
             try {
                 var input = getString(operation);
@@ -40,11 +46,12 @@ public class P2PClient {
                     }
                 }
                 if (operation.equals(P2PGlobal.Operation.Connect)) {
-                    if (!NodeUtils.isNodeExist(input)) {
+                    var array = input.split(" ");
+                    if (!NodeUtils.isNodeExist(array[0], array[1])) {
                         System.out.printf("Node with id : %s is not exist.%n", input);
                     } else {
-                        this.node.connect(lookupNode(input));
-                        currentNodeId = input;
+                        this.node.connect(lookupNode(array[0], array[1]));
+                        currentNodeId = array[0];
                         System.out.println("===============================");
                         System.out.println("Current Chat : " + currentNodeId);
                         System.out.println("===============================");
@@ -56,6 +63,9 @@ public class P2PClient {
                 }
             } catch (RemoteException | UnknownHostException e) {
                 System.out.println("Something went wrong.");
+                operation = P2PGlobal.Operation.Connect;
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Invalid input.");
                 operation = P2PGlobal.Operation.Connect;
             }
         }

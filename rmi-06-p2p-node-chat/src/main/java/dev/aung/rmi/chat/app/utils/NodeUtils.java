@@ -11,6 +11,14 @@ import java.util.Arrays;
 
 public abstract class NodeUtils {
 
+    public static PeerNode lookupNode(String nodeId, String host) throws UnknownHostException, RemoteException {
+        try {
+            return (PeerNode) Naming.lookup("rmi://%s:%s/%s".formatted(host, Constants.PORT, nodeId));
+        } catch (NotBoundException | MalformedURLException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
     public static PeerNode lookupNode(String nodeId) throws UnknownHostException, RemoteException {
         try {
             return (PeerNode) Naming.lookup("rmi://%s:%s/%s".formatted(Constants.getHost(), Constants.PORT, nodeId));
@@ -19,16 +27,16 @@ public abstract class NodeUtils {
         }
     }
 
-    public static boolean isNodeExist(String nodeId) {
+    public static boolean isNodeExist(String nodeId, String host) {
         try {
-            var url = "//%s".formatted(Constants.getHost());
+            var url = "//%s".formatted(host);
             var names = Naming.list("rmi:%s".formatted(url));
 //            for(var n : names) System.out.println(n);
             var count = Arrays.stream(names).filter(name -> name.equals("%s:%s/%s".formatted(url, Constants.PORT, nodeId))).count();
             if (count > 0) {
                 return true;
             }
-        } catch (RemoteException | MalformedURLException | UnknownHostException e) {
+        } catch (RemoteException | MalformedURLException e) {
             System.out.println("Connection timeout.");
         }
         return false;

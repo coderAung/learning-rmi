@@ -45,7 +45,7 @@ public class P2PChatMain {
         if (input.equalsIgnoreCase("/exit")) {
             System.exit(0);
         }
-        if(isNodeExist(input)) {
+        if(isNodeExist(input, Constants.getHost())) {
             throw new IllegalArgumentException("Id : %s already exists.".formatted(input));
         }
 

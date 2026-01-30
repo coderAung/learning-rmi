@@ -17,10 +17,6 @@ public class TicTacToeApp extends Application {
 
     private static ConfigurableApplicationContext context;
 
-    public static ConfigurableApplicationContext getContext() {
-        return context;
-    }
-
     public static <T> T getBean(Class<T> clz) {
         return context.getBean(clz);
     }

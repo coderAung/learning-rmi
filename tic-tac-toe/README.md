@@ -21,5 +21,4 @@
 
 ### Remark
 
-This is the first commit of the project, only ui update and page routing are implemented.
-Business or Game logic are coming soon.
+Game Logic are implemented.

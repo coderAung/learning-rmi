@@ -1,6 +1,7 @@
 package dev.aung.app.handler;
 
 import dev.aung.app.TicTacToeApp;
+import dev.aung.app.handler.event.GameEndEvent;
 import dev.aung.app.handler.event.GameStartEvent;
 import dev.aung.app.handler.event.OnMoveEvent;
 import dev.aung.app.ui.controller.Game;
@@ -43,6 +44,14 @@ public class GameEventListener {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        });
+    }
+
+    @EventListener
+    void handle(GameEndEvent ev) {
+        Platform.runLater(() -> {
+            game.setTurn(false);
+            game.end(ev.winner());
         });
     }
 

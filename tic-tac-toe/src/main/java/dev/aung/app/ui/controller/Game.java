@@ -8,6 +8,7 @@ import dev.aung.app.utils.AppBusinessException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +23,8 @@ public class Game {
 
     @FXML
     private GridPane gameBoard;
+    @FXML
+    private Label message;
 
     @Setter
     @Getter
@@ -35,14 +38,14 @@ public class Game {
 
     @FXML
     void initialize() {
-        for(int row = 0; row < 3; row++) {
-            for(int col = 0; col < 3; col++) {
+        for(int row = 1; row <= 3; row++) {
+            for(int col = 1; col <= 3; col++) {
                 Button button = new Button();
                 button.setUserData(new TicTacToeCell(row, col));
                 button.getStyleClass().add("cell");
                 button.setOnAction(this::addCellActionListener);
                 cells.add(button);
-                gameBoard.add(button, row, col);
+                gameBoard.add(button, col - 1, row - 1);
             }
         }
     }
@@ -62,11 +65,20 @@ public class Game {
     public void refresh(int row, int col, PlayerType type) {
         Button btn = cells.stream().filter(a -> cellFilter(a, row, col)).findFirst().orElseThrow(() -> new AppBusinessException("Invalid cell input."));
         btn.setText(type.symbol());
+        btn.getStyleClass().add(type.equals(PlayerType.You) ? "green" : "red");
         btn.setOnAction(null);
     }
 
     private boolean cellFilter(Button btn, int row, int col) {
         var cell = (TicTacToeCell) btn.getUserData();
         return cell.row() == row && cell.col() == col;
+    }
+
+    public void end(PlayerType winner) {
+        if(playerType.equals(winner)) {
+            message.setText("You Win.");
+        } else {
+            message.setText("You Lost.");
+        }
     }
 }

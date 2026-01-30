@@ -1,7 +1,7 @@
 package dev.aung.app.service;
 
-import dev.aung.app.game.GamePlayer;
-import dev.aung.app.game.PlayerType;
+import dev.aung.app.game.*;
+import dev.aung.app.handler.event.GameEndEvent;
 import dev.aung.app.handler.event.GameStartEvent;
 import dev.aung.app.handler.event.OnMoveEvent;
 import dev.aung.app.rmi.GamePlayService;
@@ -11,16 +11,19 @@ import org.springframework.stereotype.Service;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @Service
 public class GameServerImpl extends UnicastRemoteObject implements GameServer {
 
+    private final GameLogic logic;
     private final HashMap<GamePlayer, GamePlayService> map;
 
     public GameServerImpl() throws RemoteException {
         super();
         map = new HashMap<>();
+        logic = new GameLogic(new ArrayList<>(9));
     }
 
     @Override
@@ -46,9 +49,15 @@ public class GameServerImpl extends UnicastRemoteObject implements GameServer {
 
     @Override
     public void onMove(PlayerType playerType, int row, int col) throws RemoteException {
-        map.values().forEach(s -> {
+        logic.move(new GameMove(playerType, new TicTacToeCell(row, col)));
+        PlayerType winner = logic.getWinner();
+
+        map.forEach((p,s) -> {
             try {
                 s.onMove(new OnMoveEvent(row, col, playerType));
+                if (winner != null) {
+                    s.endGame(new GameEndEvent(winner, p.ipAddress()));
+                }
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
